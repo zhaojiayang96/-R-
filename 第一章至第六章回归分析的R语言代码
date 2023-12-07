@@ -1,0 +1,132 @@
+#####  第一章至第六章回归分析的R语言代码
+
+#####  4.1  例4.1
+# 安装并加载所需的包（如果尚未安装）
+install.packages("lmtest")
+library(lmtest)
+# 创建数据框
+df <- data.frame(
+  X1 = c(2.0, 3.5, 5.1, 7.0, 8.5, 10.0, 12.0, 14.5, 16.0, 18.0),
+  X2 = c(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0),
+  Y = c(1.2, 2.1, 3.5, 4.0, 5.2, 6.1, 7.0, 8.5, 9.0, 10.2)
+)
+# 创建线性回归模型
+model <- lm(Y ~ X1 + X2, data = df)
+# 执行White检验
+white_test <- bptest(model)
+# 打印White检验结果
+print(white_test)
+ 
+
+#####  4.1  例4.2
+# 安装并加载所需的包（如果尚未安装）
+install.packages("lmtest")
+library(lmtest)
+# 创建数据向量
+X <- c(0.000, 0.101, 0.202, 0.303, 0.404, 0.505, 0.606, 0.707, 0.808, 0.909)
+Y <- c(-0.286, 0.470, 0.990, 0.872, 0.505, 0.613, 2.424, 1.623, 4.349, 4.537)
+# 创建数据框
+data_df <- data.frame(X = X, Y = Y)
+# 打印数据框
+print(data_df)
+# GQ检验
+gq_test<-gqtest(model)
+print(gq_test)
+ 
+
+#####  5.2  例5.3
+install.packages("leaps")     # 下载leaps包
+library(leaps)                # 加载leaps包
+data<-read.csv("D:/data_5_3.csv",head = TRUE)
+# 进行全子集回归
+model5_3<-regsubsets(y~x1+x2+x3+x4+x5+x6+x7+x8+x9,data = data, nbest = 1, really.big = T)     
+results<-summary(model5_3)       
+# 输出子模型，提取结果中的R2指标进行输出
+res1<-data.frame(results$outmat,调整R平方 = results$adjr2) 
+res1                                       
+# 输出子模型，提取结果中的Cp指标进行输出
+res2<-data.frame(results$outmat,Cp = results$cp)  
+res2
+ 
+
+#####  5.3  例5.4
+data<-read.csv("D:/data_5_3.csv",head = TRUE)
+# 建立初始模型
+model5_4<-lm(y~1,data = data)  
+# 将模型的搜索范围定义为至多加入所有变量，至少包含常数项，使用前进法寻找最优回归模型
+model5_4for<-step(model5_4,scope=list(upper=~x1+x2+x3+x4+x5+x6+x7+x8+x9, lower=~1),direction = "forward")
+# 输出最优回归模型及其回归系数的显著性检验
+summary(model5_4for) 
+ 
+
+#####  5.3  例5.6
+install.packages("faraway")
+library(faraway)
+attach(swiss)
+# 计算相关矩阵
+cor(swiss, method='pearson')
+#变量的相关性热力图
+corrplot(k,addCoef.col = "black")
+# 进行逐步回归并输出结果
+model5_6=lm(Fertility~Agriculture+Examination+Education+Catholic+Infant.Mortality,data=swiss)
+model5_6_new=step(model5_6,trace=F)
+summary(model5_6_new)
+ 
+
+#####  6.2  例6.5
+x=c(1:9)
+y=c(0.5,2.3,3.4,24,54.7,82.1,94.8,96.2,96.4)
+plot(x,y)                  # 画样本的散点图
+model6_5<-nls(y~a-a/(1+(x/c)^b),start=list(a=100,b=5,c=4.8))    # 非线性回归
+summary(model6_5)
+e<-resid(model6_5)          # 计算残差赋给变量e 
+ebar<-mean(e)               # 残差e的均值
+SE<- deviance(model6_5)     # 残差平方和
+SSE<-sum((e-ebar)^2)        # 残差的离差平方和
+yhat<-fitted(model6_5)      # y的预测值
+yhatbar<-mean(prey)         # y的预测值的均值
+SSR<-sum((yhat-yhatbar)^2)  # 回归离差平方和
+ybar<-mean(y)               # y的均值
+SST<-sum((y-ybar)^2)        # 总离差平方和
+Rsquare<- 1-SE/SST          # 相关指数
+Rsquare
+ 
+
+#####  6.2  例6.6
+data<-read.csv("D:/data_6_6.csv",head=TRUE)
+y<-data_6_6[,3] 
+t<-data_6_6[,2] 
+# 非线性回归
+model6_6<-nls(y~k* (a^(b^t)),start=list(a=0.5,b=0.5,k=120),lower=c(0,0,100),upper=c(1,1,10000),algorithm="port")  
+summary(model6_6)
+# 将模型的回归系数赋给c 
+c<-coef(model6_6)      
+tt<-c(1:20)
+# 计算时间取值为tt时对应的y的预测值
+yhat<-c[3]*(c[1]^(c[2]^tt))  
+# 计算相应的年份值赋给t1
+plot(tt,y,type="o",ann=FALSE,ylim=c(0,160),xlim=c(0,20))        # 画样本的散点图
+lines(tt,yhat)           # 画预测值
+ 
+
+#####  6.3  例6.8
+data<-read.csv("D:/data_6_8.csv",head=TRUE)
+model6_8<-lm(y~x+s,data=data)
+summary(model6_8)
+
+ 
+#####  6.3  例6.9-6.10
+data<-read.csv("D:/data_6_9.csv",head=TRUE) 
+model6_9<-lm(y~x+x2,data=data)
+summary(model6_9)
+model6_10<-lm(y~x,data=data)
+summary(model6_10)
+ 
+
+#####  6.3  例6.11
+install.packages("DAAG")
+library(DAAG)
+model6_11<-glm(nomove~conc,family=binomial(link="logit"),data=anesthetic) 
+#nomove为表10-4中的y，conc为x 
+summary(model6_11)
+ 
