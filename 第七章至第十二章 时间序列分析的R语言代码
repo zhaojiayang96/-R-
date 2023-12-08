@@ -27,11 +27,15 @@ library("fUnitRoots")
 adfTest(cpi)
 
 
+
+
 ##### 7.2.3 例7.2
 xsim1 = arima.sim(n=500, list(ar=0.5))
 ts.plot(xsim1, xlab = "时间", ylab = "数值")
 acf(xsim1,main = "")
 adfTest(xsim1)
+
+
 
 
 ##### 7.2.4 例7.3
@@ -44,6 +48,8 @@ adfTest(white.noise)
 for (i in 1:2) {
   print(Box.test(xsim1, lag = 6*i))
 }
+
+
 
 
 ##### 7.3.2 例7.4
@@ -153,20 +159,16 @@ lines(tr.more, col="black", type="l", lty = 5)
 lines(y.pred, col="black", type="l", lty = 3)
 plot.season(y.detrended, seas0)
 
-  
-\textbf{9.1.1  自回归模型参数估计} 
 
- 
->x<-arima.sim(list(order=c(1,0,0),ar=0.8),n=100)
->rho <-acf(x,lag.max=1,plot=FALSE)[[1]];rho
->gamma<-acf(x,lag.max=1,type="covariance",plot=FALSE)[[1]];gamma
->sigma2<-gamma[1]-rho[2]*gamma;sigma2
-\end{lstlisting}
 
- 
->resm2 <- arima(vw, order=c(3,0,0))
->resm2
 
+##### 9.1.1  例9.1
+x<-arima.sim(list(order=c(1,0,0),ar=0.8),n=100)
+rho <-acf(x,lag.max=1,plot=FALSE)[[1]];rho
+gamma<-acf(x,lag.max=1,type="covariance",plot=FALSE)[[1]];gamma
+sigma2<-gamma[1]-rho[2]*gamma;sigma2
+resm2 <- arima(vw, order=c(3,0,0))
+resm2
 Call:
 arima(x = vw, order = c(3, 0, 0))
 
@@ -177,80 +179,61 @@ s.e.  0.0315   0.0317   0.0317     0.0017
 
 sigma^2 estimated as 0.002875:  log likelihood = 
 1500.86,aic = -2991.73
-\end{lstlisting}
-
-\textbf{9.4.2  信息准则法} 
-
  
 
+
+
+##### 9.4.2  
 #AIC准则定阶
-
->gnprate <- diff(log(gnp))
->resm <- ar(gnprate, method="mle"); resm
-
+gnprate <- diff(log(gnp))
+resm <- ar(gnprate, method="mle"); resm
 Call:
 ar(x = gnprate, method = "mle")
-
 Coefficients:
 1        2        3        4        5        6
 7        8        9
 0.4318   0.1985  -0.1180   0.0189  -0.1607   
 0.0900   0.0615  -0.0814   0.1940  
- 
 Order selected 9  sigma^2 estimated as  8.918e-05
-
 #绘制AIC图
-
->plot(as.numeric(names(resm$aic)), resm$aic,
+plot(as.numeric(names(resm$aic)), resm$aic,
 type="h",xlab="k", ylab="AIC")
-\end{lstlisting}
-
-\textbf{9.4.3  模型诊断法} 
  
 
 
->plot(rate,xlab='Value',ylab='Time',type="l")
->da2=diff(rate)
->plot(da2,type="l")
->acf(da2,lag=50)
 
->model1=arima(x=da2,order=c(0,0,1))
->res=residuals(model1)
->Box.test(res,type="Ljung",lag=10)
-
+##### 9.4.3  模型诊断法 
+plot(rate,xlab='Value',ylab='Time',type="l")
+da2=diff(rate)
+plot(da2,type="l")
+acf(da2,lag=50)
+model1=arima(x=da2,order=c(0,0,1))
+res=residuals(model1)
+Box.test(res,type="Ljung",lag=10)
 Call:
 Box-Ljung test
-
 data:  res
 X-squared = 16.575, df = 10, p-value = 0.0843
-
->model2=arima(x=da2,order=c(0,0,9),fixed=c(NA,0,0,0,0,0,0,0,NA,NA))
->res2=residuals(model2)
->Box.test(res2,type="Ljung",lag=10)
-
+ model2=arima(x=da2,order=c(0,0,9),fixed=c(NA,0,0,0,0,0,0,0,NA,NA))
+ res2=residuals(model2)
+ Box.test(res2,type="Ljung",lag=10)
 Call:
 Box-Ljung test
-
 data:  res2
 X-squared = 5.7548, df = 10, p-value = 0.8354
-\end{lstlisting}
-
-
-\textbf{9.5  化工生产批次序列的案例分析} 
-
  
-> library(TSA);data(color)
+
+
+##### 9.5  化工生产批次序列的案例分析
+library(TSA);data(color)
 #绘制时序图
-> plot(color,xlab='批次',ylab='颜色属性')
-
+plot(color,xlab='批次',ylab='颜色属性')
 #绘制自相关函数图
-> acf(color,lag=20)
-
+acf(color,lag=20)
 #绘制偏自相关函数图
-> pacf(color,lag=20)
-
+pacf(color,lag=20)
 #编写参数检验与区间估计的检验函数(函数名:t_test)
-> t_test <- function(object,alpha=0.5){
+  t_test <- function(object,alpha=0.5){
   c <- object$coef
   sd <- sqrt(diag(object$var.coef))
   t <- abs(c/sd)
@@ -262,66 +245,52 @@ X-squared = 5.7548, df = 10, p-value = 0.8354
   rownames(A) <- c("coef","lwr","upr")
   list(p_value=Pvalue,confint=A)
 }
-
 #参数估计
-> (color.arima <- arima(color,order = c(1,0,0)))
-
+(color.arima <- arima(color,order = c(1,0,0)))
 Call:
 arima(x = color,order = c(1,0,0))
-
 Coefficients:
          ar1   intercept
       0.5705   74.3293  
 s.e.  0.1435   1.9151
-
 sigma^2 estimated as 24.83:  log likelihood = 
 -106.07, aic = 216.15
-
 #区间估计及显著性检验
-> source("t_test.R");t_test(color.arima)
-
+source("t_test.R");t_test(color.arima)
 Call:
 p_values
          ar1   intercept
 0.0003589923  0.00000000
-
 confint:
          ar1   intercept
 coef0.5705478   74.32928
 1wr 0.2786831   70.43299
 upr 0.8624125   78.22556
-
 #绘制标准化残差
-> res <- color.arima$residuals
-> rst <- (res - mean(res))/sd(res)
-> plot(rst, xlab = '批次',ylab = '标准残差')
-> abline(h = 0);abline(h = c(-2,2),lty = 5)
-
+res <- color.arima$residuals
+rst <- (res - mean(res))/sd(res)
+plot(rst, xlab = '批次',ylab = '标准残差')
+abline(h = 0);abline(h = c(-2,2),lty = 5)
 #绘制残差Q-Q图
-> qqnorm(res);qqline(res)
-
+qqnorm(res);qqline(res)
 #Shapiro-Wilk正态性检验
-> shapiro.test(res)
-
+shapiro.test(res)
 Call：
      Shapiro-Wilk normality test
 data：res
 W = 0.97536，p-value = 0.6057
-
 #残差的独立性检验
-> Pvalue <- numeric(0)
-> for(k in 1:10){
+Pvalue <- numeric(0)
+for(k in 1:10){
      LJ <- Box.test(res, type = 'Ljung', lag = k,
      fitdf = 0)
      Pvalue[k] <- LJ$p.value
-  }
-> Pvalue 
+}
+Pvalue 
  [1]0.75116020.93176150.97215340.99276110.9982693
  [6]0.99958670.97578420.70654280.77385310.4905243
-
 #模型预测
-> (color.pre <- predict(color.arma,n.ahead=5))
-
+(color.pre <- predict(color.arma,n.ahead=5))
 Call:
 $pred
 TimeSeries:
@@ -329,137 +298,96 @@ Start = 36
 End = 40
 Frequency = 1
 [1]70.14757 71.94342 72.96803 73.55262 73.88616
-
 $se
 Time Series:
 Start = 36
 End = 40
 Frequency = 1
 [1]4.983379 5.737436 5.962361 6.033771 6.056835
-\end{lstlisting}
-
-\textbf{10.1.4 例10.4}
-
  
-> #一阶差分自相关图
-> acf(diff(data1))
 
-> #一阶差分偏自相关图
-> pacf(diff(data1))
 
-> #ARIMA建模
-> model1<-arima(diff(data1),order = c(1,0,0),method = "ML")
-> model1
 
+##### 10.1.4 例10.4
+#一阶差分自相关图
+acf(diff(data1))
+#一阶差分偏自相关图
+pacf(diff(data1))
+#ARIMA建模
+model1<-arima(diff(data1),order = c(1,0,0),method = "ML")
+model1
 Call:
 arima(x = diff(data1), order = c(1, 0, 0), method = "ML")
-
 Coefficients:
          ar1  intercept
       0.7052     0.1295
 s.e.  0.0914     0.0173
-
 sigma^2 estimated as 0.001629:  log likelihood = 103.54,  aic = -201.07
-
-> #残差白噪声检验
-> for (i in 1:3) {
+#残差白噪声检验
+for (i in 1:3) {
 +     print(Box.test(model1$residuals, lag = 6*i,type = "Ljung-Box"))
 + }
-
 	Box-Ljung test
-
 data:  model1$residuals
 X-squared = 3.76, df = 6, p-value = 0.7091
-
-
 	Box-Ljung test
-
 data:  model1$residuals
 X-squared = 5.0796, df = 12, p-value = 0.9553
-
-
 	Box-Ljung test
-
 data:  model1$residuals
 X-squared = 6.4577, df = 18, p-value = 0.994
-\end{lstlisting}
-
-\textbf{10.1.4 例10.5}
-
  
-> #二阶差分自相关图
-> acf(diff(diff(data2)))
 
-> #二阶差分偏自相关图
-> pacf(diff(diff(data2)))
 
-> #对二阶差分进行ARIMA建模
-> model2<-arima(diff(diff(data2)),order = c(0,0,2),method = "ML")
-> model2
 
+##### 10.1.4 例10.5
+#二阶差分自相关图
+acf(diff(diff(data2)))
+#二阶差分偏自相关图
+pacf(diff(diff(data2)))
+#对二阶差分进行ARIMA建模
+model2<-arima(diff(diff(data2)),order = c(0,0,2),method = "ML")
+model2
 Call:
 arima(x = diff(diff(data2)), order = c(0, 0, 2), method = "ML")
-
 Coefficients:
           ma1      ma2  intercept
       -0.6865  -0.3135   369.1767
 s.e.   0.0985   0.0958    49.1024
-
 sigma^2 estimated as 198160451:  log likelihood = -1296.78,  aic = 2601.55
-
-> #对残差进行白噪声检验
-> for (i in 1:3) {
+#对残差进行白噪声检验
+  for (i in 1:3) {
 +     print(Box.test(model2$residuals, lag = 6*i))
 + }
-
 	Box-Pierce test
-
 data:  model2$residuals
 X-squared = 6.6648, df = 6, p-value = 0.353
-
-
 	Box-Pierce test
-
 data:  model2$residuals
 X-squared = 16.459, df = 12, p-value = 0.1711
-
-
 	Box-Pierce test
-
 data:  model2$residuals
 X-squared = 19.278, df = 18, p-value = 0.3749
-\end{lstlisting}
-
-\textbf{10.2.4 例10.6}
-
  
-> #导入数据
-> birth<-c(9,12,8,12,10,10,8,2,0,7,10,9,4,1,7,5,8,9,5,
-5,6,4,-9,-27,12,10,10,8,8,9,14,7,4,1,1,2,6,7,7,
--2,-1,7,12,10,10,4,9,10,9,5,4,3,7,7,6,8,3,4,-5,
--14,1,6,3,2,6,1,13,10,10,6,9,10,13,16,14,16,
-12,8,7,6,9,4,7,12,8,14,11,5,5,5,10,11,11,9,
-12,13,8,6,10,13)
-> birth.ts<-ts(birth,start=1750)
 
+
+
+##### 10.2.4 例10.6
+#导入数据
+birth<-c(9,12,8,12,10,10,8,2,0,7,10,9,4,1,7,5,8,9,5,5,6,4,-9,-27,12,10,10,8,8,9,14,7,4,1,1,2,6,7,7,-2,-1,7,12,10,10,4,9,10,9,5,4,3,7,7,6,8,3,4,-5, -14,1,6,3,2,6,1,13,10,10,6,9,10,13,16,14,16,12,8,7,6,9,4,7,12,8,14,11,5,5,5,10,11,11,9,12,13,8,6,10,13)
+birth.ts<-ts(birth,start=1750)
 #画出相关时序图进行分析
-> plot.ts(birth.ts,ylab="人口出生率(%)",xlab="")
-> plot.ts(diff(birth.ts),ylab="人口出生率(%)",xlab="")
-> plot.ts(diff(birth.ts)^2)
-
+plot.ts(birth.ts,ylab="人口出生率(%)",xlab="")
+plot.ts(diff(birth.ts),ylab="人口出生率(%)",xlab="")
+plot.ts(diff(birth.ts)^2)
 #借助自相关图确定参数p的值
-> acf(diff(birth.ts)^2)
-
+acf(diff(birth.ts)^2)
 #模型参数估计
-> summary(garch(diff(birth.ts),order = c(0,1)))
+summary(garch(diff(birth.ts),order = c(0,1)))
  ***** ESTIMATION WITH ANALYTICAL GRADIENT ***** 
-
-
      I     INITIAL X(I)        D(I)
-
      1     3.538109e+01     1.000e+00
      2     5.000000e-02     1.000e+00
-
     IT   NF      F         RELDF    PRELDF    RELDX   STPPAR   D*STEP   NPRELDF
      0    1  2.196e+02
      1    2  2.146e+02  2.28e-02  4.05e-01  1.4e-02  9.0e+01  1.0e+00  1.82e+01
@@ -475,107 +403,80 @@ X-squared = 19.278, df = 18, p-value = 0.3749
     11   18  2.006e+02  2.52e-06  3.43e-06  3.5e-03  1.3e-01  9.9e-02  3.47e-06
     12   19  2.006e+02  9.99e-08  1.01e-07  5.6e-04  0.0e+00  1.6e-02  1.01e-07
     13   20  2.006e+02  2.35e-11  2.26e-11  5.7e-06  0.0e+00  1.6e-04  2.26e-11
-
  ***** RELATIVE FUNCTION CONVERGENCE *****
-
  FUNCTION     2.006276e+02   RELDX        5.653e-06
  FUNC. EVALS      20         GRAD. EVALS      14
  PRELDF       2.256e-11      NPRELDF      2.256e-11
-
      I      FINAL X(I)        D(I)          G(I)
-
      1    1.388271e+01     1.000e+00     9.617e-07
      2    5.426629e-01     1.000e+00     2.363e-05
-
-
 Call:
 garch(x = diff(birth.ts), order = c(0, 1))
-
 Model:
 GARCH(0,1)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.2446 -0.5368  0.0000  0.5611  2.8316 
-
 Coefficient(s):
-    Estimate  Std. Error  t value Pr(>|t|)    
+    Estimate  Std. Error  t value Pr( |t|)    
 a0   13.8827      2.2804    6.088 1.14e-09 ***
 a1    0.5427      0.1415    3.836 0.000125 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Diagnostic Tests:
 	Jarque Bera Test
-
 data:  Residuals
 X-squared = 3.4275, df = 2, p-value = 0.1802
-
-
 	Box-Ljung test
-
 data:  Squared.Residuals
 X-squared = 0.030974, df = 1, p-value = 0.8603
-\end{lstlisting}
-
-\textbf{10.2.5 例10.7}
-
  
-> #包准备
-> library(tidyverse)
-> library(fGarch)
-> library(fpp3)
-> library(lubridate)
 
-> #数据预处理
-> intel_df <- read_table("m-intcsp7309.txt") %>% 
-+   mutate(date = ymd(date)) %>% 
+
+
+##### 10.2.5 例10.7
+#函数包准备
+library(tidyverse)
+library(fGarch)
+library(fpp3)
+library(lubridate)
+#数据预处理
+intel_df <- read_table("m-intcsp7309.txt") % % 
++   mutate(date = ymd(date)) % % 
 +   mutate(log_return = log(1 + intc),
-+          at = log_return - mean(log_return)) %>% 
++          at = log_return - mean(log_return)) % % 
 +   mutate(num = row_number())
-
 ── Column specification ─────────────────────────────────────────────
 cols(
   date = col_double(),
   intc = col_double(),
   sp = col_double()
 )
-
-> 
-> intel_ts <- intel_df %>% 
-+   as_tsibble(index = num)
-> 
-> ##plot.ts(intel_ts$intc,ylab="月对数收益率",xlab="")
-> #残差平方的自相关图与偏自相关图
-> acf(intel_ts$at^2)
-> pacf(intel_ts$at^2)# 考虑 ARCH(3)
-> 
-> mod_arch3 <- garchFit(~ 1 + garch(3, 0), data = c(intel_ts$at), trace = FALSE)
-> mod_arch3 %>% summary() 
-
+intel_ts <- intel_df % % 
++   as_tsibble(index = num) 
+##plot.ts(intel_ts$intc,ylab="月对数收益率",xlab="")
+#残差平方的自相关图与偏自相关图
+acf(intel_ts$at^2)
+pacf(intel_ts$at^2)# 考虑 ARCH(3)  
+mod_arch3 <- garchFit(~ 1 + garch(3, 0), data = c(intel_ts$at), trace = FALSE)
+mod_arch3 % % summary() 
 Title:
  GARCH Modelling 
-
 Call:
  garchFit(formula = ~1 + garch(3, 0), data = c(intel_ts$at), trace = FALSE) 
-
 Mean and Variance Equation:
  data ~ 1 + garch(3, 0)
-<environment: 0x0000019081025c88>
+<environment: 0x0000019081025c88 
  [data = c(intel_ts$at)]
-
 Conditional Distribution:
  norm 
-
 Coefficient(s):
          mu        omega       alpha1       alpha2       alpha3  
 -3.5457e-18   1.0455e-02   2.3173e-01   7.4890e-02   5.0929e-02  
-
 Std. Errors:
  based on Hessian 
-
 Error Analysis:
-         Estimate  Std. Error  t value Pr(>|t|)    
+         Estimate  Std. Error  t value Pr( |t|)    
 mu     -3.546e-18   5.523e-03    0.000   1.0000    
 omega   1.046e-02   1.243e-03    8.411   <2e-16 ***
 alpha1  2.317e-01   1.124e-01    2.062   0.0392 *  
@@ -583,14 +484,10 @@ alpha2  7.489e-02   4.717e-02    1.588   0.1123
 alpha3  5.093e-02   4.481e-02    1.137   0.2557    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Log Likelihood:
  303.9098    normalized:  0.6844816 
-
 Description:
  Sun Jul 30 17:45:04 2023 by user: yj 
-
-
 Standardised Residuals Tests:
                                 Statistic p-Value     
  Jarque-Bera Test   R    Chi^2  204.6329  0           
@@ -602,53 +499,38 @@ Standardised Residuals Tests:
  Ljung-Box Test     R^2  Q(15)  27.20357  0.02712082  
  Ljung-Box Test     R^2  Q(20)  27.97852  0.1099088   
  LM Arch Test       R    TR^2   25.02152  0.01472123  
-
 Information Criterion Statistics:
       AIC       BIC       SIC      HQIC 
 -1.346441 -1.300317 -1.346691 -1.328251 
-
-> 
-> # ARCH(1)
-> 
-> mod_arch1 <- garchFit(~ 1 + garch(1, 0), data = c(intel_ts$at), trace = FALSE)
-> mod_arch1 %>% summary()
-
+# ARCH(1)
+mod_arch1 <- garchFit(~ 1 + garch(1, 0), data = c(intel_ts$at), trace = FALSE)
+mod_arch1 % % summary()
 Title:
  GARCH Modelling 
-
 Call:
- garchFit(formula = ~1 + garch(1, 0), data = c(intel_ts$at), trace = FALSE) 
-
+garchFit(formula = ~1 + garch(1, 0), data = c(intel_ts$at), trace = FALSE) 
 Mean and Variance Equation:
- data ~ 1 + garch(1, 0)
-<environment: 0x00000190ff4dea30>
+data ~ 1 + garch(1, 0)
+<environment: 0x00000190ff4dea30 
  [data = c(intel_ts$at)]
-
 Conditional Distribution:
  norm 
-
 Coefficient(s):
          mu        omega       alpha1  
 -3.5457e-18   1.1054e-02   3.7466e-01  
-
 Std. Errors:
  based on Hessian 
-
 Error Analysis:
-         Estimate  Std. Error  t value Pr(>|t|)    
+         Estimate  Std. Error  t value Pr( |t|)    
 mu     -3.546e-18   5.320e-03    0.000 1.000000    
 omega   1.105e-02   1.199e-03    9.222  < 2e-16 ***
 alpha1  3.747e-01   1.130e-01    3.316 0.000912 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Log Likelihood:
  299.8993    normalized:  0.6754489 
-
 Description:
  Sun Jul 30 17:45:05 2023 by user: yj 
-
-
 Standardised Residuals Tests:
                                 Statistic p-Value     
  Jarque-Bera Test   R    Chi^2  144.6127  0           
@@ -660,61 +542,47 @@ Standardised Residuals Tests:
  Ljung-Box Test     R^2  Q(15)  37.16798  0.001195935 
  Ljung-Box Test     R^2  Q(20)  38.59703  0.007479746 
  LM Arch Test       R    TR^2   27.15294  0.007344739 
-
 Information Criterion Statistics:
       AIC       BIC       SIC      HQIC 
 -1.337384 -1.309710 -1.337475 -1.326471 
 
-\end{lstlisting}
-
-\textbf{10.2.5 例10.8}
-
  
-> #导入数据
-> gd<-c(289,307,333,346,360,380,426,445,465,490,
-508,548,580,610,641,683,743,900,1036,1061,
-1437,1550,1669,1826,2293,2670,3438,3810,
-3942,4339,4611)
-> gd.ts<-ts(gd,start = 1978)
 
-> #绘制时序图
-> plot.ts(gd.ts,xlab="",ylab="供水管道长度")
 
-> #指数拟合
-> gd.df<-data.frame(length=gd,year=1978:2008)
-> model3<-lm(log(length)~year+I(year^2),data=gd.df)
-> curve(exp(model3$coefficients[1]+model3$coefficients[2]*x+model3$coefficients[3]*x^2),from = 1978,to=2008,add = T,lty=2)
-
-> #绘制残差图
-> res<-ts(gd-exp(model3$fitted.values),start = 1978)
-> plot.ts(res,xlab="",ylab="残差")
-\end{lstlisting}
-
-\textbf{11.2.3 例11.1}
-
+##### 10.2.5 例10.8
+#导入数据
+gd<-c(289,307,333,346,360,380,426,445,465,490,508,548,580,610,641,683,743,900,1036,1061,1437,1550,1669,1826,2293,2670,3438,3810,3942,4339,4611)
+gd.ts<-ts(gd,start = 1978)
+#绘制时序图
+plot.ts(gd.ts,xlab="",ylab="供水管道长度")
+#指数拟合
+gd.df<-data.frame(length=gd,year=1978:2008)
+model3<-lm(log(length)~year+I(year^2),data=gd.df)
+curve(exp(model3$coefficients[1]+model3$coefficients[2]*x+model3$coefficients[3]*x^2),from = 1978,to=2008,add = T,lty=2)
+#绘制残差图
+res<-ts(gd-exp(model3$fitted.values),start = 1978)
+plot.ts(res,xlab="",ylab="残差")
  
-> # 加载所需的包
-> library(datasets)
-> library(forecast)
-> library(tseries)
 
-> # 加载数据集
-> data(EuStockMarkets)
 
-> # 提取英国（FTSE）和法国（CAC）的时间序列数据
-> uk <- EuStockMarkets[, "FTSE"]
-> france <- EuStockMarkets[, "CAC"]
 
-> # 创建ARIMAX模型
-> arimax_model <- Arima(uk, order = c(1, 0, 1), xreg = france)
-
-> # 查看模型摘要信息
-> summary(arimax_model)
-
+##### 11.2.3 例11.1
+# 加载所需的包
+library(datasets)
+library(forecast)
+library(tseries)
+# 加载数据集
+data(EuStockMarkets)
+# 提取英国（FTSE）和法国（CAC）的时间序列数据
+uk <- EuStockMarkets[, "FTSE"]
+france <- EuStockMarkets[, "CAC"]
+# 创建ARIMAX模型
+arimax_model <- Arima(uk, order = c(1, 0, 1), xreg = france)
+# 查看模型摘要信息
+summary(arimax_model)
 Call: 
 Series: uk 
 Regression with ARIMA(1,0,1) errors 
-
 Coefficients:
          ar1     ma1  intercept    xreg
       0.9991  0.1111  1839.2149  0.7749
@@ -722,90 +590,61 @@ s.e.  0.0008  0.0221   458.2902  0.0200
 
 sigma^2 = 510.4:  log likelihood = -8439.18
 AIC=16888.37   AICc=16888.4   BIC=16916.01
-\end{lstlisting}
-
- 
-> # 检验参数和模型显著性
-> checkresiduals(arimax_model)
-
-> # ADF检验
-> adf_test <- adf.test(arimax_model$residuals)
-> print(adf_test)
-
-> # 白噪声检验
-> white_noise_test <- Box.test(arimax_model$residuals, 
+# 检验参数和模型显著性
+checkresiduals(arimax_model)
+# ADF检验
+adf_test <- adf.test(arimax_model$residuals)
+print(adf_test)
+# 白噪声检验
+white_noise_test <- Box.test(arimax_model$residuals, 
 + type = "Ljung-Box")
-> print(white_noise_test)
-
+print(white_noise_test)
 Call: 
-    Ljung-Box test
-
+        Ljung-Box test
 data:  Residuals from Regression with ARIMA(1,0,1) errors
 Q* = 470.25, df = 370, p-value = 0.0003123
 Model df: 2.   Total lags used: 372
-
 	Augmented Dickey-Fuller Test
-
 data:  arimax_model$residuals
 Dickey-Fuller = -12.241, Lag order = 12, p-value = 0.01
 alternative hypothesis: stationary
-
 	Box-Ljung test
-
 data:  arimax_model$residuals
 X-squared = 0.023766, df = 1, p-value = 0.8775
-\end{lstlisting}
-
- 
-> # 进行预测
+# 进行预测
 forecast_result <- forecast(arimax_model, h = 10)
-
-> # 绘制预测结果
-> plot(forecast_result)
-
-> # 绘制观测值和预测值的对比图
-> plot(uk, main = "Observed vs. Predicted", ylab = "FTSE Index", 
-xlab = "Date", ylim = range(c(uk, forecast_result$mean)))
-> lines(forecast_result$mean, col = "blue", lty = 2)  
-
-> # 预测值曲线
-> legend("bottomright", legend = c("Observed", "Predicted"), 
-col = c("black", "blue"), lty = c(1, 2))
-\end{lstlisting}
-
-\textbf{11.3.2 例11.2}
-
+# 绘制预测结果
+plot(forecast_result)
+# 绘制观测值和预测值的对比图
+plot(uk, main = "Observed vs. Predicted", ylab = "FTSE Index", xlab = "Date", ylim = range(c(uk, forecast_result$mean)))
+lines(forecast_result$mean, col = "blue", lty = 2)  
+# 预测值曲线
+legend("bottomright", legend = c("Observed", "Predicted"), col = c("black", "blue"), lty = c(1, 2))
  
-> # 加载所需的包
-> library(vars)
 
-> # 加载数据集
-> data(EuStockMarkets)
 
-> # 提取英国和法国股票指数数据
-> uk_fr_data <- EuStockMarkets[, c("FTSE", "CAC")]
 
-> # 转换为时间序列对象
-> ts_data <- ts(uk_fr_data, start = c(1991, 1), frequency = 365)
-
-> # 拟合VAR模型
-> var_model <- VAR(ts_data, p = 1)
-
-> # 模型参数估计和显著性检验
-> summary(var_model)
-
-> # 绘制模型残差图
-> plot(var_model)
-
-> # 预测
-> forecast <- predict(var_model, n.ahead = 50)
-
-> # 打印预测结果
-> print(forecast)
-
-> # 绘制预测结果图
-> plot(forecast)
-
+##### 11.3.2 例11.2
+# 加载所需的包
+library(vars)
+# 加载数据集
+data(EuStockMarkets)
+# 提取英国和法国股票指数数据
+uk_fr_data <- EuStockMarkets[, c("FTSE", "CAC")]
+# 转换为时间序列对象
+ts_data <- ts(uk_fr_data, start = c(1991, 1), frequency = 365)
+# 拟合VAR模型
+var_model <- VAR(ts_data, p = 1)
+# 模型参数估计和显著性检验
+summary(var_model)
+# 绘制模型残差图
+plot(var_model)
+# 预测
+forecast <- predict(var_model, n.ahead = 50)
+# 打印预测结果
+print(forecast)
+# 绘制预测结果图
+plot(forecast)
 Call: 
 VAR Estimation Results:
 ========================= 
@@ -815,81 +654,66 @@ Sample size: 1859
 Log Likelihood: -17149.93 
 Roots of the characteristic polynomial:
 0.9996 0.9996
-\end{lstlisting}
-
-\textbf{11.4.3 例11.3}
  
-> # 加载所需的包
-> library(vars)
 
-> # 加载数据集
-> data(EuStockMarkets)
 
-> # 提取英国和法国股票指数数据
-> uk_fr_data <- EuStockMarkets[, c("FTSE", "CAC")]
 
-> # 转换为时间序列对象
-> ts_data <- ts(uk_fr_data, start = c(1991, 1), frequency = 365)
-
-> # 进行协整检验
-> ca_test <- ca.jo(ts_data, ecdet = "const", type = "eigen", K = 2)
-> summary(ca_test)
-
+##### 11.4.3 例11.3
+# 加载所需的包
+library(vars)
+# 加载数据集
+data(EuStockMarkets)
+# 提取英国和法国股票指数数据
+uk_fr_data <- EuStockMarkets[, c("FTSE", "CAC")]
+# 转换为时间序列对象
+ts_data <- ts(uk_fr_data, start = c(1991, 1), frequency = 365)
+# 进行协整检验
+ca_test <- ca.jo(ts_data, ecdet = "const", type = "eigen", K = 2)
+summary(ca_test)
 Call:
 Eigenvalues (lambda):
 [1]  5.086079e-03  2.353815e-03 -8.673617e-19
-
 Values of teststatistic and critical values of test:
-
          test 10pct  5pct  1pct
 r <= 1 | 4.38  7.52  9.24 12.97
 r = 0  | 9.47 13.75 15.67 20.20
-
 Eigenvectors, normalised to first column:
 (These are the cointegration relations)
-
              FTSE.l2      CAC.l2   constant
 FTSE.l2     1.000000     1.00000   1.000000
 CAC.l2     -1.160762   -10.98189  -1.824224
 constant -631.676858 23930.32517 159.539604
-
 Weights W:
 (This is the loading matrix)
-
            FTSE.l2        CAC.l2     constant
 FTSE.d 0.002600886  1.728963e-04 3.761171e-17
 CAC.d  0.003295483 -2.582729e-06 3.657717e-17
-\end{lstlisting}
-
-\textbf{11.4.5 例11.4}
-
  
-> # 加载数据集
-> data(EuStockMarkets)
 
-> # 提取英国（FTSE）和法国（CAC）的时间序列数据
-> uk <- EuStockMarkets[, "FTSE"]
-> france <- EuStockMarkets[, "CAC"]
 
-> # 进行Granger因果检验
-> granger_test <- grangertest(uk ~ france, order = 2)
 
-> # 打印Granger因果检验结果
-> print(granger_test)
-
+##### 11.4.5 例11.4
+# 加载数据集
+data(EuStockMarkets)
+# 提取英国（FTSE）和法国（CAC）的时间序列数据
+uk <- EuStockMarkets[, "FTSE"]
+france <- EuStockMarkets[, "CAC"]
+# 进行Granger因果检验
+granger_test <- grangertest(uk ~ france, order = 2)
+# 打印Granger因果检验结果
+print(granger_test)
 Call:
 Granger causality test
-
 Model 1: uk ~ Lags(uk, 1:2) + Lags(france, 1:2)
 Model 2: uk ~ Lags(uk, 1:2)
-  Res.Df Df      F  Pr(>F)  
+  Res.Df Df      F  Pr( F)  
 1   1853                    
 2   1855 -2 2.6289 0.07243 .
-\end{lstlisting}
 
-\textbf{12.1 例12.1}
 
- 
+
+
+##### 12.1 例12.1 
 r0 <- complex(mod=1.1, arg=4/5*pi)
 poly1 <- c(1, -2*Re(r0), Mod(r0)^2)
 poly2 <- poly1 / poly1[3]
@@ -902,9 +726,6 @@ for(j in 3:length(y)){
 y <- y[-seq(100)]
 ts.plot(y, main="High frequency t.s.",
         xlab="time", ylab="y")
-\end{lstlisting}
-
- 
 fr <- seq(0, pi, length=100)
 sp2 <- numeric(length(fr))
 for(j in seq(along=fr)){
@@ -913,11 +734,11 @@ for(j in seq(along=fr)){
 sp2 <- 1/(2*pi) / sp2
 plot(fr, sp2, type='l', main="Spectral density of HIGH frequency t.s.",
      xlab="Frequency", ylab="Density")
-\end{lstlisting}
-
-\textbf{12.2.2 例12.2}
-
  
+
+
+
+##### 12.2.2 例12.2
 direct.periodogram <- function(y, freqs=seq(0,pi,length=101),
                                demean=FALSE){
   N <- length(y)
@@ -927,10 +748,10 @@ direct.periodogram <- function(y, freqs=seq(0,pi,length=101),
     II[j] <- 1/(2*pi*N)*Mod(sum(y * 
     complex(mod=1, arg=freqs[j]*seq(1,N))))^2
   }
-
   list(frequencies=freqs, spectrum=II)
 }
-## AR theoretical spectrum given AR coefficients
+
+# AR theoretical spectrum given AR coefficients
 ar.true.spectrum <- function(a, ngrid=256, sigma=1, plot.it=TRUE){
   p <- length(a)
   freqs <- seq(from=0, to=pi, length=ngrid)
@@ -959,7 +780,6 @@ demo.ar.pdg <- function(seed=7){
   N <- 120
   a <- c(0.1132, -0.64)
   y <- arima.sim(list(ar=a), n=N)*2
-
   ## 理论谱密度
   ft <- function(lambda){
     4 / (2*pi) / Mod(1 - complex(mod=0.113, arg=-lambda)
@@ -967,10 +787,8 @@ demo.ar.pdg <- function(seed=7){
   }
   lams <- seq(0, pi, length=201)
   spec0 <- ft(lams)
-  
   ## 周期图
   spec1 <- direct.periodogram(y, freqs=lams, demean=FALSE)$spectrum
-  
   ## 截断周期图
   N1 <- round(sqrt(N))
   gams <- c(acf(y, lag.max=N1,
@@ -980,7 +798,6 @@ demo.ar.pdg <- function(seed=7){
     spec2[j] <- 1/(2*pi)*(gams[1] +
                           2*sum(gams[2:(N1+1)] *
                                 cos(-seq(N1)*lams[j])))
-
   ## AR模型
   arr <- ar(y)
   spec3 <- ar.true.spectrum(arr$ar, ngrid=length(lams),
@@ -998,19 +815,21 @@ demo.ar.pdg <- function(seed=7){
          legend=c("True", "Periodogram", "Truncated-pdg", "AR Model"))
 }
 demo.ar.pdg()
-\end{lstlisting}
-
-\textbf{12.3.2 例12.3}
  
+
+
+
+##### 12.3.2 例12.3
 phi <- 0.9
 sigma2 <- 1
 lambda <- seq(-pi, pi, length.out = 1000)
 f <- sigma2 / abs(1 - phi * exp(-1i * lambda))^2
 plot(lambda, f, type = "l", xlab = "Frequency", ylab = "Spectral Density")
-\end{lstlisting}
-
-\textbf{12.3.2 例12.4}
  
+
+
+
+##### 12.3.2 例12.4
 arma.spec <- function(a, b, sigma, ngrid=201){
   p <- length(a)
   q <- length(b)
@@ -1022,21 +841,19 @@ arma.spec <- function(a, b, sigma, ngrid=201){
     spec2[ii] <- 1 - sum(complex(mod=a, arg=freqs[ii]*seq(p)))
   }
   spec = sigma^2 / (2*pi) * abs(spec1)^2 / abs(spec2)^2
-  
   list(frequency=freqs, spec=spec)
 }
+
 demo.arma.spec.sim <- function(n=300, ngrids=201){
   a <- -c(0.9, 1.4, 0.7, 0.6)
   b <- c(0.5, -0.4)
   sig <- 1.0
-  
   x <- arima.sim(
     model=list(ar=a, ma=b), n=n,
     rand.gen=function(n, ...) rnorm(n, 0, sig))
   ## 用R的arima函数估计模型参数.最大似然估计法.
   fit.mle <- arima(x, order=c(4,0,2), 
     include.mean=FALSE)
-
   sres1 <- arma.spec(a=a, b=b, sigma=sig)
   freqs <- sres1$frequency
   spec <- sres1$spec
@@ -1050,18 +867,16 @@ demo.arma.spec.sim <- function(n=300, ngrids=201){
          expression(pi/3), expression(pi/2),
          expression(2*pi/3), expression(5*pi/6), expression(pi)))
   box()
-
   ## 添加估计值
   sres2 <- arma.spec(
     a=coef(fit.mle)[1:4],
     b = coef(fit.mle)[5:6],
     sigma=fit.mle$sigma2)
   lines(freqs, sres2$spec, lty=2)
-  
   ## 图例
   legend("topleft", lty=c(1,2), lwd=c(2,1), legend=c("真实", "估计"))
   invisible()
 }
 set.seed(1)
 demo.arma.spec.sim()
-\end{lstlisting}
+ 
