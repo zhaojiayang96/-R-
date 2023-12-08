@@ -18,6 +18,8 @@ white_test <- bptest(model)
 print(white_test)
  
 
+
+
 #####  4.1  例4.2
 # 安装并加载所需的包（如果尚未安装）
 install.packages("lmtest")
@@ -34,6 +36,8 @@ gq_test<-gqtest(model)
 print(gq_test)
  
 
+
+
 #####  5.2  例5.3
 install.packages("leaps")     # 下载leaps包
 library(leaps)                # 加载leaps包
@@ -49,6 +53,8 @@ res2<-data.frame(results$outmat,Cp = results$cp)
 res2
  
 
+
+
 #####  5.3  例5.4
 data<-read.csv("D:/data_5_3.csv",head = TRUE)
 # 建立初始模型
@@ -58,6 +64,8 @@ model5_4for<-step(model5_4,scope=list(upper=~x1+x2+x3+x4+x5+x6+x7+x8+x9, lower=~
 # 输出最优回归模型及其回归系数的显著性检验
 summary(model5_4for) 
  
+
+
 
 #####  5.3  例5.6
 install.packages("faraway")
@@ -72,6 +80,8 @@ model5_6=lm(Fertility~Agriculture+Examination+Education+Catholic+Infant.Mortalit
 model5_6_new=step(model5_6,trace=F)
 summary(model5_6_new)
  
+
+
 
 #####  6.2  例6.5
 x=c(1:9)
@@ -92,6 +102,8 @@ Rsquare<- 1-SE/SST          # 相关指数
 Rsquare
  
 
+
+
 #####  6.2  例6.6
 data<-read.csv("D:/data_6_6.csv",head=TRUE)
 y<-data_6_6[,3] 
@@ -109,12 +121,16 @@ plot(tt,y,type="o",ann=FALSE,ylim=c(0,160),xlim=c(0,20))        # 画样本的�
 lines(tt,yhat)           # 画预测值
  
 
+
+
 #####  6.3  例6.8
 data<-read.csv("D:/data_6_8.csv",head=TRUE)
 model6_8<-lm(y~x+s,data=data)
 summary(model6_8)
 
- 
+
+
+
 #####  6.3  例6.9-6.10
 data<-read.csv("D:/data_6_9.csv",head=TRUE) 
 model6_9<-lm(y~x+x2,data=data)
@@ -122,6 +138,8 @@ summary(model6_9)
 model6_10<-lm(y~x,data=data)
 summary(model6_10)
  
+
+
 
 #####  6.3  例6.11
 install.packages("DAAG")
